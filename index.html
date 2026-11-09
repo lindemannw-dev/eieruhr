@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel=“manifest“ href=“manifest.json“>
+<style>
+  .background-dark {
+    background-color: #000000;
+  }
+  .center {
+    display: flex; 
+    justify-content: center;
+  }
+  .margin-top {
+    margin-top: 40px;
+  }
+  .timer {
+    font-size: 60px; 
+    color: white; 
+    font-family: 'Roboto', sans-serif; 
+  }
+
+</style>
+ 
+<script>
+
+    function startMenu() {
+      document.getElementById("popup").style.display = "block";
+    }
+
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+
+
+
+    let alarm = new Audio('alarm.wav');
+    let timerStarted = false; 
+
+   
+      document.addEventListener("DOMContentLoaded", function () {
+        let eisize = "07 : 00";
+      document.getElementById("timer").textContent = eisize;
+      });
+      let a = 7;
+    function startS() {
+      timer.innerHTML = "06 : 00";
+      a = 6
+    }
+
+    function startM() {
+      timer.innerHTML = "06 : 30";
+      a = 6.5
+    }
+
+   function startL() {
+      timer.innerHTML = "07 : 00";
+      a = 7
+    } 
+
+    function startTimer() { 
+      if (!timerStarted) {
+        let startTime = new Date().getTime();
+        let eizeit = 1000 * 60 * a;
+        let endTime = startTime + eizeit;
+
+          setInterval(function() { 
+            let timeLeft = endTime - new Date().getTime();
+            
+            if (timeLeft >0) {
+                let minutes = timeLeft / (1000 * 60);
+                minutes = Math.floor(minutes);
+                let seconds = (timeLeft /1000) % 60;
+                seconds = Math.round(seconds);
+                seconds =('0' + seconds).slice(-2);
+                let text = '0' + minutes + ' : ' + seconds;
+                timer.innerHTML = text;
+            } else {
+                alarm.play();
+                timer.innerHTML = '00 : 00';
+            }
+          }, 1000);
+          timerStarted = true;
+      }
+    }
+
+</script>
+
+</head>
+<body class="background-dark">
+
+<!-- Popup-Fenster -->
+<div id="popup" style="display: none; position: fixed; top: 30%; left: 40%; transform: translate(-50%, -30%);
+     background-color: rgb(158, 150, 224); padding: 20px; border: 2px solid #333; box-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1000; width: 60%;">
+  <p>1. Ei an der stumpfen Seite anpieken<br>
+     2. Wasser zum Kochen bringen<br>
+     3. Im Ei-Timer die Eigröße anklicken<br>
+     4. Ei in das Wasser legen und Ei-Timer starten<br>
+     5. Nach ca. 1 Minute Herd ausschalten (Restwärme)<br>
+     6. Nach Ablauf der Zeit Ei mit kaltem Wasser abschrecken<br>
+     7. "Guten Appetit"
+  </p>
+  <button onclick="closePopup()">Schließen</button>
+</div>
+
+  <div>
+    <img onclick="startMenu()" src="img/menu.png">
+  </div>
+
+<div style="display: flex; gap: 10px;">
+  <img onclick="startS()" src="img/eisizeS.png">
+  <img onclick="startM()" src="img/eisizeM.png">
+  <img onclick="startL()" src="img/eisizeL.png">
+</div>
+
+
+  <div class="center margin-top">
+    <img src="img/ei.png">
+  </div>
+
+  <div class="center margin-top timer" id="timer">
+  <!-- Inhalt wird per JavaScript gesetzt -->
+  </div>
+
+  <div class="center margin-top">
+    <img onclick="startTimer()" src="img/start.png">
+  </div>
+</body>
+</html>
