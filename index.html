@@ -1,34 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#262626">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <title>Document</title>
-    <link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#262626">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<title>Eieruhr No.3</title>
+
+<link rel="manifest" href="manifest.json">
+
 <style>
-  .background-dark {
-    background-color: #000000;
-  }
-  .center {
-    display: flex; 
-    justify-content: center;
-  }
-  .margin-top {
-    margin-top: 40px;
-  }
-  .timer {
-    font-size: 60px; 
-    color: white; 
-    font-family: 'Roboto', sans-serif; 
-  }
+
+.background-dark{
+    background-color:#000000;
+}
+
+.center{
+    display:flex;
+    justify-content:center;
+}
+
+.margin-top{
+    margin-top:40px;
+}
+
+.timer{
+    font-size:60px;
+    color:white;
+    font-family:Arial,sans-serif;
+}
+
+.stop-button{
+    display:none;
+    font-size:24px;
+    padding:12px 24px;
+    background:#ff3333;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
 
 </style>
- 
+
 <script>
+
 function startMenu() {
     document.getElementById("popup").style.display = "block";
 }
@@ -37,16 +57,14 @@ function closePopup() {
     document.getElementById("popup").style.display = "none";
 }
 
-let alarm = null;
-let intervalID = null;
+let alarm;
 let timerStarted = false;
+let intervalID = null;
 let audioUnlocked = false;
-let a = 0.1;
+let a = 7;
 
 document.addEventListener("DOMContentLoaded", function () {
-
     document.getElementById("timer").textContent = "07 : 00";
-
 });
 
 function startS() {
@@ -62,6 +80,17 @@ function startM() {
 function startL() {
     document.getElementById("timer").innerHTML = "07 : 00";
     a = 7;
+}
+
+function stopAlarm() {
+
+    if (alarm) {
+        alarm.pause();
+        alarm.currentTime = 0;
+        alarm.loop = false;
+    }
+
+    document.getElementById("stopButton").style.display = "none";
 }
 
 function startTimer() {
@@ -80,9 +109,7 @@ function startTimer() {
                 unlock.currentTime = 0;
                 audioUnlocked = true;
             })
-            .catch(err => {
-                console.log("Audio konnte nicht freigegeben werden:", err);
-            });
+            .catch(() => {});
     }
 
     alarm = new Audio("alarm.mp3");
@@ -101,29 +128,24 @@ function startTimer() {
             let seconds = Math.floor((timeLeft % 60000) / 1000);
 
             document.getElementById("timer").innerHTML =
-                String(minutes).padStart(2, "0") +
+                String(minutes).padStart(2,"0") +
                 " : " +
-                String(seconds).padStart(2, "0");
+                String(seconds).padStart(2,"0");
 
         } else {
 
             clearInterval(intervalID);
-            intervalID = null;
 
             document.getElementById("timer").innerHTML = "00 : 00";
 
+            alarm.loop = true;
             alarm.currentTime = 0;
 
-            alarm.play()
-                .then(() => {
-                    console.log("Alarm abgespielt");
-                })
-                .catch(err => {
+            alarm.play().catch(function() {
+                alert("⏰ Eier fertig!");
+            });
 
-                    console.log("Alarm blockiert:", err);
-
-                    alert("⏰ Eier fertig!");
-                });
+            document.getElementById("stopButton").style.display = "block";
 
             timerStarted = false;
         }
@@ -132,46 +154,68 @@ function startTimer() {
 
     timerStarted = true;
 }
+
 </script>
 
 </head>
+
 <body class="background-dark">
 
-<!-- Popup-Fenster -->
-<div id="popup" style="display: none; position: fixed; top: 30%; left: 40%; transform: translate(-50%, -30%);
-     background-color: rgb(158, 150, 224); padding: 20px; border: 2px solid #333; box-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1000; width: 60%;">
-  <p>1. Ei an der stumpfen Seite anpieken<br>
-     2. Wasser zum Kochen bringen<br>
-     3. Im Ei-Timer die Eigröße anklicken<br>
-     4. Ei in das Wasser legen und Ei-Timer starten<br>
-     5. Nach ca. 1 Minute Herd ausschalten (Restwärme)<br>
-     6. Nach Ablauf der Zeit Ei mit kaltem Wasser abschrecken<br>
-     7. "Guten Appetit"
-  </p>
-  <button onclick="closePopup()">Schließen</button>
+<div id="popup"
+     style="display:none;
+            position:fixed;
+            top:30%;
+            left:40%;
+            transform:translate(-50%,-30%);
+            background-color:rgb(158,150,224);
+            padding:20px;
+            border:2px solid #333;
+            box-shadow:0 0 10px rgba(0,0,0,0.5);
+            z-index:1000;
+            width:60%;">
+
+<p>
+1. Ei an der stumpfen Seite anpieken<br>
+2. Wasser zum Kochen bringen<br>
+3. Im Ei-Timer die Eigröße anklicken<br>
+4. Ei in das Wasser legen und Ei-Timer starten<br>
+5. Nach ca. 1 Minute Herd ausschalten (Restwärme)<br>
+6. Nach Ablauf der Zeit Ei mit kaltem Wasser abschrecken<br>
+7. Guten Appetit
+</p>
+
+<button onclick="closePopup()">Schließen</button>
+
 </div>
 
-  <div>
+<div>
     <img onclick="startMenu()" src="img/menu.png">
-  </div>
-
-<div style="display: flex; gap: 10px;">
-  <img onclick="startS()" src="img/EisizeS.png">
-  <img onclick="startM()" src="img/EisizeM.png">
-  <img onclick="startL()" src="img/EisizeL.png">
 </div>
 
+<div style="display:flex; gap:10px;">
+    <img onclick="startS()" src="img/EisizeS.png">
+    <img onclick="startM()" src="img/EisizeM.png">
+    <img onclick="startL()" src="img/EisizeL.png">
+</div>
 
-  <div class="center margin-top">
+<div class="center margin-top">
     <img src="img/Ei.png">
-  </div>
+</div>
 
-  <div class="center margin-top timer" id="timer">
-  <!-- Inhalt wird per JavaScript gesetzt -->
-  </div>
+<div class="center margin-top timer" id="timer">
+</div>
 
-  <div class="center margin-top">
+<div class="center margin-top">
     <img onclick="startTimer()" src="img/start.png">
-  </div>
+</div>
+
+<div class="center margin-top">
+    <button id="stopButton"
+            class="stop-button"
+            onclick="stopAlarm()">
+        Alarm beenden
+    </button>
+</div>
+
 </body>
 </html>
