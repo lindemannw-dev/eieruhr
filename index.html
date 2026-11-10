@@ -68,17 +68,9 @@ function startTimer() {
         return;
     }
 
-    // Audio nach Benutzeraktion initialisieren
+    // Audio vorbereiten
     alarm = new Audio("alarm.wav");
     alarm.preload = "auto";
-
-    // Audio für spätere Wiedergabe "freischalten"
-    alarm.play()
-        .then(() => {
-            alarm.pause();
-            alarm.currentTime = 0;
-        })
-        .catch(() => {});
 
     let startTime = Date.now();
     let eizeit = a * 60 * 1000;
@@ -93,21 +85,18 @@ function startTimer() {
             let minutes = Math.floor(timeLeft / 60000);
             let seconds = Math.floor((timeLeft % 60000) / 1000);
 
-            let text =
+            document.getElementById("timer").innerHTML =
                 String(minutes).padStart(2, "0") +
                 " : " +
                 String(seconds).padStart(2, "0");
 
-            document.getElementById("timer").innerHTML = text;
-
         } else {
 
             clearInterval(intervalID);
-            intervalID = null;
 
             document.getElementById("timer").innerHTML = "00 : 00";
 
-            alarm.play().catch(function (err) {
+            alarm.play().catch(function(err) {
                 console.log("Audiofehler:", err);
                 alert("Timer abgelaufen!");
             });
@@ -119,6 +108,7 @@ function startTimer() {
 
     timerStarted = true;
 }
+
 </script>
 
 </head>
