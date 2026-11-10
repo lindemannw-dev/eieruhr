@@ -29,85 +29,66 @@
 </style>
  
 <script>
-function startMenu() {
-    document.getElementById("popup").style.display = "block";
-}
 
-function closePopup() {
-    document.getElementById("popup").style.display = "none";
-}
-
-let alarm;
-let timerStarted = false;
-let intervalID = null;
-let a = 7;
-
-document.addEventListener("DOMContentLoaded", function () {
-    let eisize = "07 : 00";
-    document.getElementById("timer").textContent = eisize;
-});
-
-function startS() {
-    document.getElementById("timer").innerHTML = "06 : 00";
-    a = 6;
-}
-
-function startM() {
-    document.getElementById("timer").innerHTML = "06 : 30";
-    a = 6.5;
-}
-
-function startL() {
-    document.getElementById("timer").innerHTML = "07 : 00";
-    a = 7;
-}
-
-function startTimer() {
-
-    if (timerStarted) {
-        return;
+    function startMenu() {
+      document.getElementById("popup").style.display = "block";
     }
 
-    // Audio vorbereiten
-    alarm = new Audio("alarm.wav");
-    alarm.preload = "auto";
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
 
-    let startTime = Date.now();
-    let eizeit = a * 60 * 1000;
-    let endTime = startTime + eizeit;
 
-    intervalID = setInterval(function () {
 
-        let timeLeft = endTime - Date.now();
+    let alarm = new Audio('alarm.wav');
+    let timerStarted = false; 
 
-        if (timeLeft > 0) {
+   
+      document.addEventListener("DOMContentLoaded", function () {
+        let eisize = "07 : 00";
+      document.getElementById("timer").textContent = eisize;
+      });
+      let a = 7;
+    function startS() {
+      timer.innerHTML = "06 : 00";
+      a = 6
+    }
 
-            let minutes = Math.floor(timeLeft / 60000);
-            let seconds = Math.floor((timeLeft % 60000) / 1000);
+    function startM() {
+      timer.innerHTML = "06 : 30";
+      a = 6.5
+    }
 
-            document.getElementById("timer").innerHTML =
-                String(minutes).padStart(2, "0") +
-                " : " +
-                String(seconds).padStart(2, "0");
+   function startL() {
+      timer.innerHTML = "07 : 00";
+      a = 7
+    } 
 
-        } else {
+    function startTimer() { 
+      if (!timerStarted) {
+        let startTime = new Date().getTime();
+        let eizeit = 1000 * 60 * a;
+        let endTime = startTime + eizeit;
 
-            clearInterval(intervalID);
-
-            document.getElementById("timer").innerHTML = "00 : 00";
-
-            alarm.play().catch(function(err) {
-                console.log("Audiofehler:", err);
-                alert("Timer abgelaufen!");
-            });
-
-            timerStarted = false;
-        }
-
-    }, 1000);
-
-    timerStarted = true;
-}
+          setInterval(function() { 
+            let timeLeft = endTime - new Date().getTime();
+            
+            if (timeLeft >0) {
+                let minutes = timeLeft / (1000 * 60);
+                minutes = Math.floor(minutes);
+                let seconds = (timeLeft /1000) % 60;
+                seconds = Math.round(seconds);
+                seconds =('0' + seconds).slice(-2);
+                let text = '0' + minutes + ' : ' + seconds;
+                timer.innerHTML = text;
+            } else {
+                alarm.play();
+                timer.innerHTML = '00 : 00';
+            }
+          }, 1000);
+          timerStarted = true;
+      }
+    }
 
 </script>
 
@@ -148,7 +129,7 @@ function startTimer() {
   </div>
 
   <div class="center margin-top">
-    <img onclick= src="img/start.png">
+    <img onclick="startTimer()" src="img/start.png">
   </div>
 </body>
 </html>
